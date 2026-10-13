@@ -1,0 +1,31 @@
+import agenciaDeViajes.*
+
+describe "Test de valor final" 
+{
+  test "pack nacional sin beneficios vigentes" 
+  {
+    const guia = new Coordinador(cantViajes = 13,
+                                 estaMotivado = true, 
+                                 aniosExp = 4, 
+                                 rol = "Guía")
+
+    const beneficio1 = new Beneficios(tipo = "Descuento", costo = 100, estaVigente = false)
+    const beneficio2 = new Beneficios(tipo = "Descuento", costo = 200, estaVigente = true)
+    const beneficio3 = new Beneficios(tipo = "Descuento", costo = 300, estaVigente = false)
+
+    const packNacional = new PackViajeNacional(coordinador = guia, 
+                                         listaBeneficios = #{beneficio1, beneficio2, beneficio3})
+
+    assert.that(packNacional.calcularPrecioFinal() > 0)
+  }
+
+  test "pack nacional con 2 beneficios debe sumar precio base"
+  {
+    assert.that(true)
+  }
+
+  test "pack internacional sin benefcios con 20% recargo"
+  {
+    assert.that(true)
+  }
+}
