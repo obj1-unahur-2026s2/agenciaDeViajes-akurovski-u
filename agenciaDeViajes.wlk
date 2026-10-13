@@ -1,11 +1,11 @@
 
 class Coordinador
 {
-    var listaRoles = #{"Guía", "Asistente Logístico", "Acompañante"}
+    const listaRoles = #{"Guía", "Asistente Logístico", "Acompañante"}
 
-    var cantViajes = 0
-    var estaMotivado = true
-    var aniosExp = 0
+    const cantViajes = 0
+    const estaMotivado = true
+    const aniosExp = 0
     var rol = ""
 
     //SETTERS
@@ -14,7 +14,7 @@ class Coordinador
     {
         if(listaRoles.contains(nuevoRol))
         {
-            throw new Exception("Este rol no está disponible")
+            throw new DomainException(message = "Este rol no está disponible en la lista.")
         }
 
         rol = nuevoRol
@@ -23,6 +23,8 @@ class Coordinador
 
 
     //GETTERS
+
+    method getListaDeRoles() = listaRoles
 
     method getRol() = rol
 
@@ -45,8 +47,6 @@ class Coordinador
 
         return rol.equals("Acompañante")
     }
-
-
 }
 
 class Beneficios
@@ -117,7 +117,7 @@ class PackViajeInternacional inherits PackViaje
 {
     const listaActividades = []
     const paisDest = ""
-    const lugarDeInteres = true
+    const esLugarDeInteres = true
     const cantEscalas = 0
 
     //GETTERS
@@ -126,9 +126,9 @@ class PackViajeInternacional inherits PackViaje
 
     method getPaisDest() = paisDest
 
-    method cantEscalas() = cantEscalas
+    method getCantEscalas() = cantEscalas
 
-    method lugarDeInteres() = lugarDeInteres
+    method esLugarDeInteres() = esLugarDeInteres
 
     override method getValorFinal()
     {
@@ -139,5 +139,33 @@ class PackViajeInternacional inherits PackViaje
 
         return valorBase * 1.2
     }
+
+    override method esPackPremium() 
+    {
+        return  
+                self.esLugarDeInteres()
+                and
+                self.getCantEscalas() == 0
+                and
+                self.getDiasDuracion() > 20
+    }
 }
 
+class PackViajeProvincial inherits PackViajeNacional
+{
+    const cantCiudades = 1
+
+    method getCantCiudades() = cantCiudades
+
+    override method esPackPremium()
+    {
+        return
+                self.getListaActividades().count() >= 4
+                and
+                cantCiudades > 5
+                and
+                self.getListaBeneficios().count({x => x.estaVigente()})
+    }
+
+    override method getValorFinal() = super() * 1.05
+}
